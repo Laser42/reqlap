@@ -24,6 +24,14 @@ namespace Reqlap.Views
             _requestBodyTextBox = this.FindControl<TextBox>("RequestBodyTextBox")!;
             _sendButton = this.FindControl<Button>("SendButton")!;
             _errorTextBox = this.FindControl<TextBox>("ErrorTextBox")!;
+
+            var requestMethods = new[] { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put,
+            HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Head, HttpMethod.Options,
+            HttpMethod.Connect, HttpMethod.Trace };
+            foreach (var requestMethod in requestMethods)
+            {
+                _httpMethodComboBox.Items.Add(requestMethod);
+            }
         }
 
         private void SendRequestButton_Click(object sender, RoutedEventArgs args)
@@ -47,18 +55,22 @@ namespace Reqlap.Views
             };
 
             if (!string.IsNullOrWhiteSpace(_requestBodyTextBox.Text))
+            {
+
                 request.Content = new StringContent(_requestBodyTextBox.Text);
 
-            try
-            {
-                JsonDocument.Parse(_requestBodyTextBox.Text);
-                request.Headers.Add(HttpRequestHeader.ContentType.ToString(),
-                    new[] { MediaTypeNames.Application.Json });
-            }
-            catch
-            {
-                request.Headers.Add(HttpRequestHeader.ContentType.ToString(),
-                    new[] { MediaTypeNames.Text.Plain });
+                try
+                {
+                    JsonDocument.Parse(_requestBodyTextBox.Text);
+                    request.Headers.Add(HttpRequestHeader.ContentType.ToString(),
+                        new[] { MediaTypeNames.Application.Json });
+                }
+                catch
+                {
+
+                    request.Headers.Add(HttpRequestHeader.ContentType.ToString(),
+                        new[] { MediaTypeNames.Text.Plain });
+                }
             }
         }
     }

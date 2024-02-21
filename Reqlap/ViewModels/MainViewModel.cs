@@ -8,35 +8,39 @@ namespace Reqlap.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    public ObservableCollection<HttpMethod> HttpMethods { get; }
-
     public ReactiveCommand<HttpRequestMessage, HttpResponseMessage?> SendRequestCommand { get; }
 
-    public string ResponseContent { get; private set; }
+    public string ResponseContent
+    {
+        get { return _responseContent; }
+        set { this.RaiseAndSetIfChanged(ref _responseContent, value); }
+    }
 
-    public HttpStatusCode ResponseStatusCode { get; private set; }
+    public string ResponseStatusCode
+    {
+        get { return _responseStatusCode; }
+        set { this.RaiseAndSetIfChanged(ref _responseStatusCode, value); }
+    }
 
-    public bool IsRequestInProgress { get; private set; }
+    public bool IsRequestInProgress
+    {
+        get { return _isRequestInProgress; }
+        set { this.RaiseAndSetIfChanged(ref _isRequestInProgress, value); }
+    }
 
     private readonly HttpClient _httpClient;
+    private string _responseContent = string.Empty;
+    private string _responseStatusCode = string.Empty;
+    private bool _isRequestInProgress = false;
 
     public MainViewModel(HttpClient httpClient)
     {
         _httpClient = httpClient;
 
-        HttpMethods = [HttpMethod.Get,
-            HttpMethod.Post,
-            HttpMethod.Put,
-            HttpMethod.Patch,
-            HttpMethod.Delete,
-            HttpMethod.Head,
-            HttpMethod.Options,
-            HttpMethod.Connect,
-            HttpMethod.Trace];
-
         SendRequestCommand = ReactiveCommand.CreateFromTask<HttpRequestMessage, HttpResponseMessage?>(
             async request =>
         {
+            ResponseStatusCode = "Sending...";
             try
             {
                 return await _httpClient.SendAsync(request);
@@ -49,35 +53,23 @@ public class MainViewModel : ViewModelBase
         });
 
         // Подписка на результат выполнения команды (необязательно)
-        SendRequestCommand.Subscribe( async result =>
+        /*SendRequestCommand.Subscribe( async result =>
         {
             if (result != null)
             {
-                // Обрабатываем успешный результат
-                ResponseStatusCode = result.StatusCode;
+                ResponseStatusCode = $"{(int)result.StatusCode} {result.StatusCode}";
                 ResponseContent = await result.Content.ReadAsStringAsync();
-                
-                // Сообщаем UI об изменении
-                this.RaisePropertyChanged(nameof(ResponseStatusCode));
-                this.RaisePropertyChanged(nameof(ResponseContent));
             }
             else
             {
-                // Обрабатываем ошибку
-                ResponseStatusCode = 0;
-                
-                // Сообщаем UI об изменении
-                this.RaisePropertyChanged(nameof(ResponseStatusCode));
-                this.RaisePropertyChanged(nameof(ResponseContent));
+                ResponseStatusCode = "Unknown error";
             }
-        });
+        });*/
 
         // Обработка изменения состояния команды (необязательно)
         SendRequestCommand.IsExecuting.Subscribe(isExecuting =>
         {
             IsRequestInProgress = isExecuting;
-            this.RaisePropertyChanged(nameof(IsRequestInProgress));
         });
     }
-
 }

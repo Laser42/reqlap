@@ -1,15 +1,10 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Net.Mime;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Reqlap.Views
 {
@@ -29,14 +24,6 @@ namespace Reqlap.Views
             _requestBodyTextBox = this.FindControl<TextBox>("RequestBodyTextBox")!;
             _sendButton = this.FindControl<Button>("SendButton")!;
             _errorTextBox = this.FindControl<TextBox>("ErrorTextBox")!;
-
-            var requestMethods = new[] { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put,
-            HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Head, HttpMethod.Options,
-            HttpMethod.Connect, HttpMethod.Trace };
-            foreach (var requestMethod in requestMethods)
-            {
-                _httpMethodComboBox.Items.Add(requestMethod);
-            }
         }
 
         private void SendRequestButton_Click(object sender, RoutedEventArgs args)
@@ -59,7 +46,7 @@ namespace Reqlap.Views
                 Method = _httpMethodComboBox.SelectedValue as HttpMethod
             };
 
-            if (string.IsNullOrWhiteSpace(_requestBodyTextBox.Text))
+            if (!string.IsNullOrWhiteSpace(_requestBodyTextBox.Text))
                 request.Content = new StringContent(_requestBodyTextBox.Text);
 
             try

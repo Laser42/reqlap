@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using ReactiveUI;
+using Reqlap.ViewModels;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -10,58 +12,47 @@ namespace Reqlap.Views
 {
     public partial class RequestView : UserControl
     {
-        private readonly ComboBox _httpMethodComboBox;
-        private readonly TextBox _uriTextBox;
-        private readonly TextBox _requestBodyTextBox;
-        private readonly Button _sendButton;
-        private readonly TextBox _errorTextBox;
         public RequestView()
         {
             InitializeComponent();
 
-            _httpMethodComboBox = this.FindControl<ComboBox>("HttpMethodComboBox")!;
-            _uriTextBox = this.FindControl<TextBox>("UriTextBox")!;
-            _requestBodyTextBox = this.FindControl<TextBox>("RequestBodyTextBox")!;
-            _sendButton = this.FindControl<Button>("SendButton")!;
-            _errorTextBox = this.FindControl<TextBox>("ErrorTextBox")!;
-
             var requestMethods = new[] { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put,
-            HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Head, HttpMethod.Options,
-            HttpMethod.Connect, HttpMethod.Trace };
+                HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Head, HttpMethod.Options,
+                HttpMethod.Connect, HttpMethod.Trace };
             foreach (var requestMethod in requestMethods)
             {
-                _httpMethodComboBox.Items.Add(requestMethod);
+                HttpMethodComboBox.Items.Add(requestMethod);
             }
         }
 
         private void SendRequestButton_Click(object sender, RoutedEventArgs args)
         {
-            if (_httpMethodComboBox.SelectedValue == null)
+            if (HttpMethodComboBox.SelectedValue == null)
             {
-                _errorTextBox.Text = "Метод не указан";
+                //_errorTextBox.Text = "Метод не указан";
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_uriTextBox.Text))
+            if (string.IsNullOrWhiteSpace(UriTextBox.Text))
             {
-                _errorTextBox.Text = "URI не указан";
+                //_errorTextBox.Text = "URI не указан";
                 return;
             }
 
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(_uriTextBox.Text),
-                Method = _httpMethodComboBox.SelectedValue as HttpMethod
+                RequestUri = new Uri(UriTextBox.Text),
+                Method = (HttpMethodComboBox.SelectedValue as HttpMethod)!
             };
 
-            if (!string.IsNullOrWhiteSpace(_requestBodyTextBox.Text))
+            if (!string.IsNullOrWhiteSpace(RequestBodyTextBox.Text))
             {
 
-                request.Content = new StringContent(_requestBodyTextBox.Text);
+                request.Content = new StringContent(RequestBodyTextBox.Text);
 
                 try
                 {
-                    JsonDocument.Parse(_requestBodyTextBox.Text);
+                    JsonDocument.Parse(RequestBodyTextBox.Text);
                     request.Headers.Add(HttpRequestHeader.ContentType.ToString(),
                         new[] { MediaTypeNames.Application.Json });
                 }
@@ -72,6 +63,9 @@ namespace Reqlap.Views
                         new[] { MediaTypeNames.Text.Plain });
                 }
             }
+
+            var mainViewModel = (DataContext as MainViewModel)!;
+            mainViewModel.Request = request;
         }
     }
 }

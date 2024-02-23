@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using Avalonia.Styling;
+using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Net;
@@ -33,15 +34,22 @@ public class MainViewModel : ViewModelBase
         set { this.RaiseAndSetIfChanged(ref _responseBody, value); }
     }
 
+    public string BackgroundImagePath { get; }
+
     private readonly HttpClient _httpClient;
+    private readonly ThemeVariant _actualThemeVariant;
+
     private bool _isRequestInProgress = false;
     private HttpRequestMessage? _request;
     private string _responseStatus;
     private string _responseBody;
 
-    public MainViewModel(HttpClient httpClient)
+    public MainViewModel(HttpClient httpClient, ThemeVariant actualThemeVariant)
     {
         _httpClient = httpClient;
+        _actualThemeVariant = actualThemeVariant;
+        BackgroundImagePath = $"/Assets/bg720{_actualThemeVariant.Key.ToString()!.ToLowerInvariant}.jpg";
+        BackgroundImagePath = $"/Assets/bg720dark.jpg";
 
         this.WhenAnyValue(x => x.Request)
             .ObserveOn(RxApp.MainThreadScheduler)

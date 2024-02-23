@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using Reqlap.ViewModels;
 using Reqlap.Views;
@@ -22,6 +23,7 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddHttpClient();
         services.AddTransient<MainViewModel>();
+        services.AddSingleton(ActualThemeVariant);
         ServiceProvider = services.BuildServiceProvider();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

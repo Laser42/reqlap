@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:Reqlap.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Reqlap.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Reqlap" Width="700" Height="500">
+        Icon="/Assets/ricon.ico"
+        Title="Reqlap" Width="720" Height="720">
 	<views:MainView />
 </Window>

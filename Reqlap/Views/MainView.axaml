@@ -13,12 +13,11 @@
 		<vm:MainViewModel  />
 	</Design.DataContext>
 	<UserControl.Background>
-		<!--<ImageBrush Source="{Binding BackgroundImagePath}"></ImageBrush>-->
-		<ImageBrush Source="/Assets/bg720dark.jpg"></ImageBrush>
+		<ImageBrush Source="{Binding BackgroundImage}"></ImageBrush>
+		<!--<ImageBrush Source="/Assets/bg720dark.jpg"></ImageBrush>-->
 	</UserControl.Background>
 	<StackPanel>
-		<TextBlock x:Name="TextDbg"></TextBlock>
-		<views:RequestView />
-		<views:ResponseView />
+		<views:RequestView Margin="0 20 0 0" />
+		<views:ResponseView Margin="0 20 0 0" />
 	</StackPanel>
 </UserControl>

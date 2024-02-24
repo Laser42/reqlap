@@ -1,4 +1,6 @@
-﻿using Avalonia.Styling;
+﻿using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using Avalonia.Styling;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
@@ -34,7 +36,7 @@ public class MainViewModel : ViewModelBase
         set { this.RaiseAndSetIfChanged(ref _responseBody, value); }
     }
 
-    public string BackgroundImagePath { get; }
+    public Bitmap? BackgroundImage { get; }
 
     private readonly HttpClient _httpClient;
     private readonly ThemeVariant _actualThemeVariant;
@@ -48,8 +50,10 @@ public class MainViewModel : ViewModelBase
     {
         _httpClient = httpClient;
         _actualThemeVariant = actualThemeVariant;
-        BackgroundImagePath = $"/Assets/bg720{_actualThemeVariant.Key.ToString()!.ToLowerInvariant}.jpg";
-        BackgroundImagePath = $"/Assets/bg720dark.jpg";
+        var backgroundImagePath = 
+            $"avares://Reqlap/Assets/bg720{_actualThemeVariant.Key.ToString()!.ToLowerInvariant()}.jpg";
+        BackgroundImage = new Bitmap(AssetLoader.Open(new Uri(backgroundImagePath)));
+        ResponseStatus = "Response";
 
         this.WhenAnyValue(x => x.Request)
             .ObserveOn(RxApp.MainThreadScheduler)

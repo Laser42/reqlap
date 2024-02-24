@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using ReactiveUI;
 using Reqlap.ViewModels;
 using System;
@@ -29,19 +31,31 @@ namespace Reqlap.Views
         {
             if (HttpMethodComboBox.SelectedValue == null)
             {
-                //_errorTextBox.Text = "Метод не указан";
+                ShowError("Method not selected");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(UriTextBox.Text))
             {
-                //_errorTextBox.Text = "URI не указан";
+                ShowError("URI is empty");
+                return;
+            }
+            Uri uri;
+            try
+            {
+                uri = new Uri(UriTextBox.Text);
+            }
+            catch
+            {
+                ShowError("URI is invalid");
                 return;
             }
 
+            ClearError();
+
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(UriTextBox.Text),
+                RequestUri = uri,
                 Method = (HttpMethodComboBox.SelectedValue as HttpMethod)!
             };
 
@@ -66,6 +80,18 @@ namespace Reqlap.Views
 
             var mainViewModel = (DataContext as MainViewModel)!;
             mainViewModel.Request = request;
+        }
+
+        private void ShowError(string message)
+        {
+            RequestErrorTextBlock.Text = message;
+            RequestErrorTextBlock.Height = 20;
+        }
+
+        private void ClearError()
+        {
+            RequestErrorTextBlock.Text = string.Empty;
+            RequestErrorTextBlock.Height = 0;
         }
     }
 }

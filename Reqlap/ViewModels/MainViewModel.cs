@@ -53,7 +53,7 @@ public class MainViewModel : ViewModelBase
         var backgroundImagePath = 
             $"avares://Reqlap/Assets/bg720{_actualThemeVariant.Key.ToString()!.ToLowerInvariant()}.jpg";
         BackgroundImage = new Bitmap(AssetLoader.Open(new Uri(backgroundImagePath)));
-        ResponseStatus = "Response";
+        ResponseStatus = string.Empty;
 
         this.WhenAnyValue(x => x.Request)
             .ObserveOn(RxApp.MainThreadScheduler)

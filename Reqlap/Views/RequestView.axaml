@@ -14,8 +14,9 @@
 			<TextBox x:Name="UriTextBox" Width="300" Margin="10 0 10 0"/>
 			<Button x:Name="SendButton" Content="Send" IsEnabled="{ Binding !IsRequestInProgress }" Click="SendRequestButton_Click"></Button>
 		</StackPanel>
-		<Expander Header="Body" Width="435" Margin="0 10 0 0">
-			<TextBox x:Name="RequestBodyTextBox" Width="420" Height="150" TextWrapping="Wrap" AcceptsReturn="True"  Margin="10 0 10 0"/>
+		<TextBlock x:Name="RequestErrorTextBlock" Height="20" FontSize="10" FontWeight="Bold" Margin="0 10 0 0" Foreground="Red"></TextBlock>
+		<TextBox x:Name="RequestBodyTextBox" Width="435" Height="150" TextWrapping="Wrap" AcceptsReturn="True"/>
+		<Expander Header="Headers" Width="435" Margin="0 10 0 0">
 		</Expander>
 	</StackPanel>
 </UserControl>

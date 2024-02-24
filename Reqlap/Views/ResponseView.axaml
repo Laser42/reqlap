@@ -7,8 +7,9 @@
              x:Class="Reqlap.Views.ResponseView"
 			 x:DataType="vm:MainViewModel">
 	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-		<Expander Header="{ Binding ResponseStatus }" Width="435">
-			<TextBox x:Name="ResponseBody" Width="420" Height="150"  Text="{ Binding ResponseBody }" TextWrapping="Wrap" Margin="0,10,0,0"/>
+		<TextBlock Text="{ Binding ResponseStatus }" Height="20" FontSize="10" FontWeight="Bold" Margin="0 10 0 0"></TextBlock>
+		<TextBox x:Name="ResponseBody" Width="435" Height="150"  Text="{ Binding ResponseBody }" TextWrapping="Wrap"/>
+		<Expander Header="Headers" Width="435" Margin="0 10 0 0">
 		</Expander>
 	</StackPanel>
 </UserControl>
